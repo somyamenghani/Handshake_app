@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+/handshake/backend/config
+/handshake/frontend/node_modules
+/handshake/node_modules
 
 # testing
 /coverage
