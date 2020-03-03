@@ -17,7 +17,8 @@ router.post("/", async (req, res) => {
       console.log(sql);
     }
     else{
-        sql=`INSERT INTO Company(Name, EmailId, Password, Location) VALUES ('${req.body.name}',' ${req.body.userEmail}', '${req.body.password}','${req.body.location}')`
+        sql=`INSERT INTO Company(Name, EmailId, Password, Location) VALUES ('${req.body.name}','${req.body.userEmail}', '${req.body.password}','${req.body.location}')`
+        console.log(sql);
     }
     pool.query(sql, (err, sqlResult) => {
       if (err) {

@@ -69,8 +69,9 @@ class SignUp extends Component{
 
     handleDropdownChange=(e)=> {
         this.setState({ selectValue: e.target.value });
+        console.log(this.state.studentView);
         this.setState({ studentView:!this.state.studentView});
-        console.log(this.state.selectValue);
+        console.log(this.state.studentView);
       }
     //submit Login handler to send a request to the node backend
     submitSignUp = (e) => {

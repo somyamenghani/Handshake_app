@@ -17,7 +17,8 @@ class Login extends Component{
             userEmail : "",
             password : "",
             authFlag : false,
-            selectValue:1,
+            selectValue: '1',
+            studentView:true,
             errorMessage : ""
         }
         //Bind the handlers to this class
@@ -40,8 +41,11 @@ class Login extends Component{
     }
 
     handleDropdownChange=(e)=> {
-        this.setState({ selectValue: e.target.value });
         console.log(this.state.selectValue);
+        this.setState({ selectValue: e.target.value });
+        //console.log(this.state.studentView);
+        this.setState({ studentView:!this.state.studentView});
+        //console.log(this.state.studentView);
       }
     //submit Login handler to send a request to the node backend
     submitLogin = (e) => {
@@ -89,48 +93,110 @@ class Login extends Component{
         //redirect based on successful login
         let redirectVar = null;
         if (localStorage.getItem("token")) {
-            redirectVar = <Redirect to="/home" />;
+            if(localStorage.getItem("user_type")==1)
+            {
+                console.log("coming in if");
+                redirectVar = <Redirect to="/studentDashboard" />; 
+            }
+            else{
+                redirectVar = <Redirect to="/companyDashboard" />;
+            }
+            
         }
-        return(
-            <div>
-                {redirectVar}
-            <div className="container">
-                <div className="login-form">
-                    <div className="main-div">
-                        <div className="panel">
-                            <h2>Sign In</h2>
-                            <p>Please enter your Email address and password</p>
-                            <div style={{float: "left", color: "red"}} >
-                { this.state.errorMessage &&
-                            <h5 className="error">Error: { this.state.errorMessage} </h5> }
+        if(this.state.studentView)
+        {
+            return(
+                <div>
+                    {redirectVar}
+                <div className="container">
+                    <div className="login-form">
+                        <div className="main-div">
+                            <div className="panel">
+                                <h2>Sign In</h2>
+                                <h2>As Student</h2>
+                                <p>Please enter your Email address and password</p>
+                                <div style={{float: "left", color: "red"}} >
+                    { this.state.errorMessage &&
+                                <h5 className="error">Error: { this.state.errorMessage} </h5> }
+                                </div>
                             </div>
+                            <form onSubmit={this.submitLogin}>
+                            <div className="form-group">
+                            <select id = "dropdown" onChange={this.handleDropdownChange}>
+                                     <option value="1">Student</option>
+                                    <option value="2">Company</option>
+                            </select>
+                            {/* <select value={this.state.selectValue} onChange={this.handleDropdownChange}>
+                <option value="1">Student</option>
+                <option value="2">Company</option>
+                </select> */}
+                                </div>
+                                <div className="form-group">
+                                    <input onChange = {this.userEmailChangeHandler} type="email" className="form-control" name="Email Address" placeholder="Email Address" required />
+                                </div>
+                                <div className="form-group">
+                                    <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required />
+                                </div>
+                                <button type ="submit"  className="btn btn-primary">Login</button>   
+                                </form>              
                         </div>
-                        <form onSubmit={this.submitLogin}>
-                        <div className="form-group">
-                        <select id = "dropdown" onChange={this.handleDropdownChange}>
-                                 <option value="1">Student</option>
-                                <option value="2">Company</option>
-                        </select>
-                            </div>
-                            <div className="form-group">
-                                <input onChange = {this.userEmailChangeHandler} type="email" className="form-control" name="Email Address" placeholder="Email Address" required />
-                            </div>
-                            <div className="form-group">
-                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required />
-                            </div>
-                            <button type ="submit"  className="btn btn-primary">Login</button>   
-                            </form>              
+                        
                     </div>
                     
                 </div>
                 
-            </div>
-            
-            </div>
-        )
-    }
-}
+                </div>
+            )
+        }
+        
+        else {
+            return(
+                <div>
+                    {redirectVar}
+                <div className="container">
+                    <div className="login-form">
+                        <div className="main-div">
+                            <div className="panel">
+                                <h2>Sign In</h2>
+                                <h2>As Company</h2>
+                                <p>Please enter your Email address and password</p>
+                                <div style={{float: "left", color: "red"}} >
+                    { this.state.errorMessage &&
+                                <h5 className="error">Error: { this.state.errorMessage} </h5> }
+                                </div>
+                            </div>
+                            <form onSubmit={this.submitLogin}>
+                            <div className="form-group">
+                            <select id = "dropdown" onChange={this.handleDropdownChange}>
+                                     <option value="1">Student</option>
+                                    <option value="2">Company</option>
+                            </select>
+                            {/* <select value={this.state.selectValue} onChange={this.handleDropdownChange}>
+                <option value="1">Student</option>
+                <option value="2">Company</option>
+                </select> */}
+                                </div>
+                                <div className="form-group">
+                                    <input onChange = {this.userEmailChangeHandler} type="email" className="form-control" name="Email Address" placeholder="Email Address" required />
+                                </div>
+                                <div className="form-group">
+                                    <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required />
+                                </div>
+                                <button type ="submit"  className="btn btn-primary">Login</button>   
+                                </form>              
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+                </div>
+            )
+        }
 
+        }
+    }
+       
 const mapStateToProps=state=>{
     return{
         userId:state.userId,

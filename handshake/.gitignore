@@ -7,6 +7,8 @@
 /handshake/backend/config
 /handshake/frontend/node_modules
 /handshake/node_modules
+/Users/somya/Documents/GIT/Handshake_app/handshake/backend/config/config.js
+/Users/somya/Documents/GIT/Handshake_app/handshake/backend/config/dbconfig.js
 
 # testing
 /coverage
@@ -16,6 +18,8 @@
 
 # misc
 .DS_Store
+../.DS_Store
+../.gitignore
 .env.local
 .env.development.local
 .env.test.local

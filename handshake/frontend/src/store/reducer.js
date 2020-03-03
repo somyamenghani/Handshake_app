@@ -31,6 +31,17 @@ const reducer =(state=initialState,action)=>{
             user:localStorage.getItem("user_profile")         
         }
     }
+    if(action.type ==='COMPANYDETAILS')
+    {
+        
+        return{
+            userId : localStorage.getItem("user_id"),
+            userName : localStorage.getItem("user_name"),
+            userEmail:localStorage.getItem("email_id"),
+            userType:localStorage.getItem("user_type") ,
+            user:localStorage.getItem("user_profile")         
+        }
+    }
     if(action.type ==='SIGNUP')
     {
         
