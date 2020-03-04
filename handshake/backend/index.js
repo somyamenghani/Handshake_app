@@ -7,6 +7,8 @@
   const update = require("./routes/update");
   const companyProfile = require("./routes/companyProfile");
   const events = require("./routes/events");
+  const jobs = require("./routes/jobs");
+  
   
   
   app.use("/login", login);
@@ -15,6 +17,7 @@
   app.use("/update", update);
   app.use("/companyProfile", companyProfile);
   app.use("/events", events);
+  app.use("/jobs/",jobs)
   
   app.listen(3001, () => {
     console.log(`Server listening on port 3001`);
