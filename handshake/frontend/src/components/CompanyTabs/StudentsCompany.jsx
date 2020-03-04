@@ -15,6 +15,7 @@ class StudentsCompany extends Component {
     componentDidMount(){
         
     }
+    
    
     render() {
         let redirectVar;
@@ -34,14 +35,14 @@ class StudentsCompany extends Component {
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     	<span id="search_concept">Filter by</span> <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#contains">Student Name</a></li>
-                      <li><a href="#its_equal">College Name</a></li>
-                      <li><a href="#greather_than">Skills</a></li>
+                    <ul class="dropdown-menu" role="menu" value={this.state.categoryValue} onChange={this.handleCategoryChange}>
+                      <li value="name">Student Name</li>
+                      <li value="skill">Skill</li>
+                      <li value="collegeName">CollegeName</li>
                     </ul>
                 </div>
                 <input type="hidden" name="search_param" value="all" id="search_param"/>         
-                <input type="text" class="form-control" name="x" placeholder="Search term..."/>
+                <input type="text" class="form-control" name="x" placeholder="Search term..." onChange={this.handleSearch}/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                 </span>

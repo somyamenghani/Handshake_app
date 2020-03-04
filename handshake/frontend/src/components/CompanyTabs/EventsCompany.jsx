@@ -115,10 +115,10 @@ class EventsCompany extends Component {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
                 this.setState({
-                    addIsOpen : false,
-                    updateFlag:!this.state.updateFlag
+                    addIsOpen : false
                 })
             }
+            this.viewEvents();
         })
         .catch(err => { 
             this.setState({errorMessage:"Event could not be added"});
@@ -155,10 +155,7 @@ class EventsCompany extends Component {
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
-        if(this.state.updateFlag)
-        {
-            this.viewEvents();
-        }
+        
        
         return (
             <div>

@@ -33,12 +33,12 @@ router.post("/", async (req, res) => {
         if(sqlResult && sqlResult.length > 0 && sqlResult[0] && req.body.userType==1)
         {
         console.log(sqlResult);
-        let result=JSON.stringify(sqlResult);
-        console.log(result);
+        // let result=JSON.stringify(sqlResult);
+        // console.log(result);
         const payload = {
           emailId: req.body.userEmail,
           userId: JSON.stringify(sqlResult[0].StudentId),
-          name: JSON.stringify(sqlResult[0].Name),
+          name: sqlResult[0].Name,
           collegeName: JSON.stringify(sqlResult[0].collegeName),
           major: JSON.stringify(sqlResult[0].Major)
       
@@ -60,12 +60,12 @@ router.post("/", async (req, res) => {
      else if(sqlResult && sqlResult.length > 0 && sqlResult[0] && req.body.userType==='2')
       {
       console.log(sqlResult);
-      let result=JSON.stringify(sqlResult);
-      console.log(result);
+      // let result=JSON.stringify(sqlResult);
+      // console.log(result);
       const payload = {
         emailId: req.body.userEmail,
         userId: JSON.stringify(sqlResult[0].CompanyId),
-        name: JSON.stringify(sqlResult[0].Name),
+        name: sqlResult[0].Name,
         collegeName: JSON.stringify(sqlResult[0].Location)
       };
       const token = jwt.sign(payload,secret, {
