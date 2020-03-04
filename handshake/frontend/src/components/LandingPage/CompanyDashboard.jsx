@@ -11,28 +11,79 @@ class CompanyDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            jobs: [{jobid:'7',companyid:'10001',jobtitle:'Software Engineer',postingdate:'2020-03-01 03:35:36',deadline:'2020-12-01',city:'santa clara',state:'CA',salary:'100000',description:'new engineer',jobcategory:'full-time'},
-            {jobid:'8',companyid:'10001',jobtitle:'Software Engineer',postingdate:'2020-03-01 03:35:36',deadline:'2020-12-01',city:'santa clara',state:'CA',salary:'100000',description:'new engineer',jobcategory:'part-time'},
-            {jobid:'9',companyid:'10001',jobtitle:'Software Engineer test',postingdate:'2020-03-01 03:35:36',deadline:'2020-12-01',city:'santa clara',state:'CA',salary:'100000',description:'new engineer',jobcategory:'full-time'}
-        
-        ]  ,
+            jobs: []  ,
         modalIsOpen: false, 
         addIsOpen:false,
-        jobTitle: '',
+        jobtitle: '',
         description: '',
         msg: '',
-        jobId: 0 ,
-        value: 'full-time'            
+        jobid: 0 ,
+        categoryValue:'full-time'
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-        this.logChange = this.logChange.bind(this); 
         this.addJobPost = this.addJobPost.bind(this);
         this.closeAddModal=this.closeAddModal.bind(this);
     }
     componentDidMount(){
+        this.viewJobPosting();
         
+    }
+    viewJobPosting=()=>
+    {
+        
+        let data = {
+            userType:localStorage.getItem("user_type"),
+            companyId:localStorage.getItem("user_id")
+        }
+        axios.post('http://localhost:3001/jobs/getJobsPosted',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                let jobs=response.data;
+                this.setState({
+                    jobs   
+                });
+            }
+        })
+        .catch(err => { 
+            this.setState({errorMessage:"Job could not be viewed"});
+        });
+
+
+    }
+
+    onAddSubmit=(e)=>
+    {
+        e.preventDefault()
+        let data = {
+            userType:localStorage.getItem("user_type"),
+            companyId:localStorage.getItem("user_id"),
+            companyname:localStorage.getItem("user_name"),
+            jobtitle:this.state.jobtitle,
+            description: this.state.description,
+            salary: this.state.salary,
+            postingdate:this.state.postingdate,
+            deadline:this.state.deadline,
+            state:this.state.state,
+            city:this.state.city,
+            jobcategory:this.state.categoryValue
+        }
+        axios.post('http://localhost:3001/jobs/postJobOpening',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                this.setState({
+                    addIsOpen : false
+                })
+            }
+            this.viewJobPosting();
+        })
+        .catch(err => { 
+            this.setState({errorMessage:"Job could not be added"});
+        });
+
+
     }
     openModal(job) {
         this.setState({
@@ -49,6 +100,43 @@ class CompanyDashboard extends Component {
                     
         });
     }
+    jobTitleChange=(e)=>{
+        this.setState({
+            jobtitle : e.target.value
+        })
+
+
+    }
+    descriptionChange = (e) => {
+        this.setState({
+            description : e.target.value
+        })
+    }
+    handleCategoryChange = (e) => {
+        this.setState({
+            categoryValue : e.target.value
+        })
+    }
+    handleSalaryChange = (e) => {
+        this.setState({
+            salary : e.target.value
+        })
+    }
+    handleCityInfoChange = (e) => {
+        this.setState({
+            city: e.target.value
+        })
+    }
+    handleStateInfoChange = (e) => {
+        this.setState({
+            state: e.target.value
+        })
+    }
+    handleDeadlineChange = (e) => {
+        this.setState({
+            deadline: e.target.value
+        })
+    }
 
     closeModal() {
         this.setState({
@@ -61,43 +149,25 @@ class CompanyDashboard extends Component {
         });
     }
 
-    logChange(e) {
-        this.setState({
-           
-        });
-        console.log("log");
-    }
+   
     addJobPost(){
 
         this.setState({
             addIsOpen: true,          
         });
     }
-    handleEdit(event) {
-        //Edit functionality
-        event.preventDefault()
-        var data = {
-            jobId: this.state.jobId,
-            jobTitle: this.state.jobTitle,
-            description: this.state.description
-        }
-       
-        data = "success";
-            console.log(data)
-            if (data === "success") {
-                this.setState({
-                    msg: "User has been edited."
-                });
-            }
-        
-    }
+   
    
     render() {
         let redirectVar;
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
-        console.log(this.state.jobs)
+        // if(this.state.updateFlag)
+        // {
+        //     this.viewJobPosting();
+        // }
+        
        
         return (
             <div>
@@ -254,19 +324,19 @@ class CompanyDashboard extends Component {
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1"><b>State</b></span>
                                 </div>
-                                <input type="text" size="50" name="state" className="form-control" aria-label="city" aria-describedby="basic-addon1" onChange={this.handleCityInfoChange}   pattern=".*\S.*" required />
+                                <input type="text" size="50" name="state" className="form-control" aria-label="city" aria-describedby="basic-addon1" onChange={this.handleStateInfoChange}   pattern=".*\S.*" required />
                             </div>
                             <div className="input-group mb-2">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1"><b>Posting Date</b></span>
                                 </div>
-                                <input type="text" size="50" name="postingDate" className="form-control" aria-label="postingDate" aria-describedby="basic-addon1" onChange={this.handleCityInfoChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
+                                <input type="text" size="50" name="postingDate" className="form-control" aria-label="postingDate" aria-describedby="basic-addon1" onChange={this.handlePostingDtaeChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
                             </div>
                             <div className="input-group mb-2">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1"><b>Deadline</b></span>
                                 </div>
-                                <input type="text" size="50" name="deadline" className="form-control" aria-label="deadline" aria-describedby="basic-addon1" onChange={this.handleCityInfoChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
+                                <input type="text" size="50" name="deadline" className="form-control" aria-label="deadline" aria-describedby="basic-addon1" onChange={this.handleDeadlineChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
                             </div>
                             
                             
