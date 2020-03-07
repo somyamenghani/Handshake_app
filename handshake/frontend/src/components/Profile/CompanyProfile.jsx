@@ -124,12 +124,6 @@ console.log("insde"+this.state.modal)
         .catch(err => { 
             this.setState({errorMessage: "Something went wrong"+err});
         });
-        
-        
-       
-
-
-
     }
 
     render() {
