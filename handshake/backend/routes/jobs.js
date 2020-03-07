@@ -98,6 +98,42 @@ router.post("/postJobOpening", async (req, res) => {
     })
   })
 
+  router.post("/getJobsApplied", async (req, res) => {
+
+    let msg = req.body;
+    let sql;
+    msg.route = "job application details";
+    console.log('request reached'+JSON.stringify(req.body));
+   if(req.body.status==='all')
+   {
+      sql=`Select * from application where studentid='${req.body.studentid}'`;
+      console.log(sql);
+   }
+   else{
+    sql=`Select * from application where studentid='${req.body.studentid}' and status='${req.body.status}'`;
+    console.log(sql);
+   }
+    
+    pool.query(sql, (err, sqlResult) => {
+      if (err) {
+        res.writeHead(500,'Internal server error',{
+          'Content-Type' : 'text/plain'
+      })
+      res.end("Internal server error");
+    }
+      else{
+        
+        console.log(sqlResult);
+        let result=JSON.stringify(sqlResult);
+        console.log(result);
+        res.writeHead(200,{
+          'Content-Type' : 'text/plain'
+      })
+      res.end(result);
+  }
+    })
+  })
+
 //   router.post("/getAllJobsPosted", async (req, res) => {
 
 //     let msg = req.body;
@@ -153,7 +189,7 @@ router.post("/postJobOpening", async (req, res) => {
     console.log('request reached'+JSON.stringify(req.body));
     {
       
-      sql=`INSERT INTO application(studentid,jobid,applicationdate,status) VALUES ('${req.body.studentid}','${req.body.jobid}','${ts}', '${status}')`;
+      sql=`INSERT INTO application(studentid,jobid,applicationdate,status,jobtitle) VALUES ('${req.body.studentid}','${req.body.jobid}','${ts}', '${status}','${req.body.jobtitle}')`;
       console.log(sql);
     }
    
@@ -196,7 +232,7 @@ router.post("/postJobOpening", async (req, res) => {
     msg.route = "login";
     console.log('request reached'+JSON.stringify(req.body));
     {
-      sql="Select s.StudentId,s.Name from application a join Student s where a.jobid='"+req.body.jobid+"' and s.studentId = a.studentid";
+      sql="Select s.StudentId,s.Name,a.jobid from application a join Student s where a.jobid='"+req.body.jobid+"' and s.studentId = a.studentid";
       console.log(sql);
     }
     pool.query(sql, (err, sqlResult) => {
@@ -207,35 +243,15 @@ router.post("/postJobOpening", async (req, res) => {
       res.end("Internal server error");
     }
       else{
-        if(sqlResult && sqlResult.length > 0 )
-        {
+        
         console.log(sqlResult);
         let result=JSON.stringify(sqlResult);
         console.log(result);
-        /*
-        const payload = {
-          emailId: req.body.userEmail,
-          userId: JSON.stringify(sqlResult[0].StudentId),
-          name: JSON.stringify(sqlResult[0].Name),
-          collegeName: JSON.stringify(sqlResult[0].collegeName),
-          major: JSON.stringify(sqlResult[0].Major)
       
-        };
-        */
-   
         res.writeHead(200,{
           'Content-Type' : 'text/plain'
       })
       res.end(result);
-      }
-    else {
-      console.log(sqlResult);
-        res.writeHead(401,'Company not registered',{
-          'Content-Type' : 'text/plain'
-      })
-      res.end("Company not registered");
-
-    }
   }
     })
   })
@@ -288,7 +304,7 @@ router.post("/searchJobs", async (req, res) => {
   let searchString = req.body.searchString;
   let category = req.body.category;
   let location = req.body.location;
-  sql = "select * from Jobs where (jobtitle like '%" + searchString + "%' or city like '%" + searchString +"%')";
+  sql = "select * from Jobs where (jobtitle like '%" + searchString + "%' or city like '%" + searchString +"%' or companyname like '%" + searchString +"%')";
   if (category != null && category.length > 0)
   {
     sql = sql + " and jobcategory = '" + category + "'"
@@ -338,47 +354,47 @@ router.post("/searchJobs", async (req, res) => {
   })
 })
 
-router.post("/getJobInfo", async (req, res) => {
+// router.post("/getJobInfo", async (req, res) => {
 
-  let msg = req.body;
-  let sql;
-  msg.route = "loginaaaaaa";
-  console.log('request reached'+JSON.stringify(req.body));
-  let jobid = req.body.jobid;
+//   let msg = req.body;
+//   let sql;
+//   msg.route = "loginaaaaaa";
+//   console.log('request reached'+JSON.stringify(req.body));
+//   let jobid = req.body.jobid;
   
-  sql = "select * from handshake_app.Jobs where jobid='" + jobid + "';";
-  console.log(sql);
+//   sql = "select * from handshake_app.Jobs where jobid='" + jobid + "';";
+//   console.log(sql);
 
-  pool.query(sql, (err, sqlResult) => {
-    if (err) {
-      console.log(err);
-      res.writeHead(500,'Internal server error',{
-        'Content-Type' : 'text/plain'
-    })
-    res.end("Internal server error");
-  }
-    else{
-      if(sqlResult && sqlResult.length > 0 )
-      {
-      console.log(sqlResult);
-      let result=JSON.stringify(sqlResult);
-      console.log(result);
-      res.writeHead(200,{
-        'Content-Type' : 'text/plain'
-    })
-    res.end(result);
-    }
-  else {
-    console.log(sqlResult);
-      res.writeHead(401,'[]',{
-        'Content-Type' : 'text/plain'
-    })
-    res.end("[]");
+//   pool.query(sql, (err, sqlResult) => {
+//     if (err) {
+//       console.log(err);
+//       res.writeHead(500,'Internal server error',{
+//         'Content-Type' : 'text/plain'
+//     })
+//     res.end("Internal server error");
+//   }
+//     else{
+//       if(sqlResult && sqlResult.length > 0 )
+//       {
+//       console.log(sqlResult);
+//       let result=JSON.stringify(sqlResult);
+//       console.log(result);
+//       res.writeHead(200,{
+//         'Content-Type' : 'text/plain'
+//     })
+//     res.end(result);
+//     }
+//   else {
+//     console.log(sqlResult);
+//       res.writeHead(401,'[]',{
+//         'Content-Type' : 'text/plain'
+//     })
+//     res.end("[]");
 
-  }
-}
-  })
-})
+//   }
+// }
+//   })
+// })
 
 
 module.exports = router;

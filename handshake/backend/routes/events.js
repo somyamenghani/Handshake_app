@@ -75,4 +75,39 @@ router.post("/details/", async (req, res) => {
   }
     })
   })
+  router.post("/searchEvents", async (req, res) => {
+
+    let msg = req.body;
+    let sql;
+    msg.route = "searchevents";
+    console.log('request reached'+JSON.stringify(req.body));
+    let searchString = req.body.searchString;
+    
+    sql = "select * from Events where (EventName like '%" + searchString + "%') ORDER BY Date ASC";
+   
+    console.log(sql);
+  
+    
+    pool.query(sql, (err, sqlResult) => {
+      if (err) {
+        console.log(err);
+        res.writeHead(500,'Internal server error',{
+          'Content-Type' : 'text/plain'
+      })
+      res.end("Internal server error");
+    }
+      else{
+          console.log(sqlResult);
+              let result=JSON.stringify(sqlResult);
+               console.log(result);
+              res.writeHead(200,{
+               'Content-Type' : 'text/plain'
+            })
+             res.end(result);
+             
+  
+  }
+    })
+  })
+
 module.exports = router;
