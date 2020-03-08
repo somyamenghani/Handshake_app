@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
     console.log('request reached'+JSON.stringify(req.body));
     let searchString = req.body.searchString;
     
-    sql = "select StudentId,EmailId,Name,CollegeName,Skills from Student where (Name like '%" + searchString + "%' or CollegeName like '%" + searchString +"%' or Skills like '%" + searchString +"%')";
+    sql = "select StudentId,EmailId,Name,CollegeName,Skills,Major from Student where (Name like '%" + searchString + "%' or CollegeName like '%" + searchString +"%' or Skills like '%" + searchString +"%')";
     
     console.log(sql);
   
