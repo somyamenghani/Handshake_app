@@ -160,8 +160,8 @@ console.log("insde"+this.state.modal)
     }
 
     render() {
-        let user, name = "", user_id = "", email_id = "", location = "", city = "",state="",country="",contactInfo="",description="", redirectVar;
-        let locationVar, mailVar, userName, userButton, listButton, userImage = this.state.user_profile.image||dummy;let showCompanyProfile;
+        let user,user_id='', name = "", email_id = "", location = "",contactInfo="",description="", redirectVar;
+        let  userImage = this.state.user_profile.image||dummy;let showCompanyProfile;
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }

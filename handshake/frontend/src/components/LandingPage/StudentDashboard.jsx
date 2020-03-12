@@ -287,7 +287,8 @@ console.log(this.state.company_profile.name);
                         <Modal
                             isOpen={this.state.applyIsOpen}
                             onRequestClose={this.closeModal}
-                             contentLabel="Example Modal" >
+                             contentLabel="Example Modal"
+                              >
                            
                            <div>
                          <form onSubmit={this.onSubmit} enctype="multipart/form-data">
@@ -329,7 +330,7 @@ console.log(this.state.company_profile.name);
                                   
     <div class="row">    
         <div class="col-xs-8 col-xs-offset-2">
-		    <div class="input-group">
+		    <div class="main-div">
                 <div class="input-group-btn search-panel">
                     <button type="button" class="btn btn-default">
                     	<span id="search_concept">Filter by Job Category : 
@@ -341,19 +342,16 @@ console.log(this.state.company_profile.name);
                   <option value="intern">Intern</option>
                </select>
                </span> 
-               
                     </button>
-                  
                 </div>
-             
                 <input type="text" class="form-control" name="jobtitle" placeholder="Job Title or Company Name" onChange={this.jobtitleSearch}/>
-   
                 <input type="text" class="form-control" name="city" placeholder="City" onChange={this.citySearch}/>
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" onClick={this.searchJobPosting}><span class="glyphicon glyphicon-search"></span></button>
-                </span>
+                <div  style={{display: "flex",justifyContent: "center",alignItems: "center"}} >
+                    <button class="btn btn-primary" type="button" onClick={this.searchJobPosting}><span class="glyphicon glyphicon-search"></span>Search</button>
+                </div>
             </div>
         </div>
+        
 	</div>
     
 </div>

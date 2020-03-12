@@ -55,11 +55,11 @@ class Navbar extends Component {
         }
         let redirectVar = null;
         if(localStorage.getItem("token")){
-            if(localStorage.getItem("user_type")===1)
+            if(localStorage.getItem("user_type")==1)
             {
             redirectVar = <Redirect to="/studentDashboard"/>
             }
-            if(localStorage.getItem("user_type")===2)
+            if(localStorage.getItem("user_type")==2)
             {
             redirectVar = <Redirect to="/companyDashboard"/>
             }

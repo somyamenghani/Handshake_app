@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
-import cookie from 'react-cookies';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 

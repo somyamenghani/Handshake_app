@@ -116,13 +116,13 @@ class Students extends Component {
                               
 <div class="row">    
     <div class="col-xs-8 col-xs-offset-2">
-        <div class="input-group">
+        <div>
             <div class="input-group-btn search-panel">
             </div>
             <input type="text" class="form-control" name="search" placeholder="Student Name or College Name" onChange={this.studentCriteria}/>
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onClick={this.searchStudent}><span class="glyphicon glyphicon-search"></span></button>
-            </span>
+            <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                <button class="btn btn-primary" type="button" onClick={this.searchStudent}><span class="glyphicon glyphicon-search"></span>Search</button>
+            </div>
         </div>
     </div>
 </div>

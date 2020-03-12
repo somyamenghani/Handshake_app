@@ -306,12 +306,12 @@ onRequestClose={this.closeAddModal}
     </div>
     <select value={this.state.categoryValue} onChange={this.handleCategoryChange}  className="form-control" aria-label="category" aria-describedby="basic-addon1"  required >
     <option value="all">All</option>
-    <option value="se">Software Engineering</option>
-    <option value="ee">Electrical Engineering</option>
-    <option value="cse">Computer Science Engineering</option>
-    <option value="ie">Industrial Engineering</option>
-    <option value="cie">Civil Engineering</option>
-    <option value="ce">Computer Engineering</option>
+    <option value="Software Engineering">Software Engineering</option>
+    <option value="Electrical Engineering">Electrical Engineering</option>
+    <option value="Computer Science Engineering">Computer Science Engineering</option>
+    <option value="Industrial Engineering">Industrial Engineering</option>
+    <option value="Civil Engineering">Civil Engineering</option>
+    <option value="Computer Engineering">Computer Engineering</option>
     </select>
 </div>
 <div className="input-group mb-2">

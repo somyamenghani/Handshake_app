@@ -6,7 +6,6 @@ import dummy from '../../common/dummy.png';
 import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
-import { NavLink, Link } from "react-router-dom";
 
 class ShowProfile extends Component {
     constructor(props) {
@@ -198,8 +197,8 @@ this.setState({ showEditModal:true});
 }
 
     render() {
-        let user, name = "", user_id = "", email_id = "", user_careerobj = "", city = "",state="",country="",contactNumber="",collegeName="",major="",degree="",cgpa="",yop="",collegeLocation="",skills="",workDetails="", redirectVar;
-        let locationVar, mailVar, userName, userButton, listButton, userImage =this.state.user_profile.image||dummy;
+        let redirectVar;
+        let userImage =this.state.user_profile.image||dummy;
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
