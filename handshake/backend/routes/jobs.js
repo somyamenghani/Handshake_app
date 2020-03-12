@@ -5,6 +5,10 @@ const router = express.Router();
 const pool = require('../db/sqlConnection');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/config');
+const multer  = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+const { awsBucket, awsSecretAccessKey,region, awsAccessKey, awsSessionToken,awsPermission } = require("../config/config")
 
 //Route to handle Post Request Call
 
@@ -134,62 +138,47 @@ router.post("/postJobOpening", async (req, res) => {
     })
   })
 
-//   router.post("/getAllJobsPosted", async (req, res) => {
 
-//     let msg = req.body;
-//     let sql;
-//     msg.route = "All job posted details";
-//     console.log('request reached'+JSON.stringify(req.body));
-   
-    
-    
-//       sql=`Select * from Jobs where CompanyId='${req.body.companyId}'`;
-//       console.log(sql);
-    
-    
-//     pool.query(sql, (err, sqlResult) => {
-//       if (err) {
-//         res.writeHead(500,'Internal server error',{
-//           'Content-Type' : 'text/plain'
-//       })
-//       res.end("Internal server error");
-//     }
-//       else{
-//         if(sqlResult && sqlResult.length > 0 )
-//         {
-//         console.log(sqlResult);
-//         let result=JSON.stringify(sqlResult);
-//         console.log(result);
-//         res.writeHead(200,{
-//           'Content-Type' : 'text/plain'
-//       })
-//       res.end(result);
-//       }
-//     else {
-//       console.log(sqlResult);
-//         res.writeHead(401,'Company not registered',{
-//           'Content-Type' : 'text/plain'
-//       })
-//       res.end("Company not registered");
+aws.config.update({
+  secretAccessKey: awsSecretAccessKey,
+  accessKeyId: awsAccessKey,
+  region:region,
+  sessionToken:awsSessionToken
+});
 
-//     }
-//   }
-//     })
-//   })
+var s3 = new aws.S3();
 
+var upload = multer({
+  storage: multerS3({
+      s3: s3,
+      bucket: awsBucket,
+      key: function (req, file, cb) {
+        console.log("dataaaaa");
+          console.log("AWs config" + aws.config);
+          console.log(JSON.stringify(req.body));
+          console.log(s3);
+          console.log(file);
+          cb(null, (Date.now() + '-' +file.originalname));//use Date.now() for unique file keys
+          console.log("reached file");
+      }
+  })
+});
 
-  router.post("/applyJob", async (req, res) => {
+  router.post("/applyJob",upload.single('file'), async (req, res) => {
 
     let msg = req.body;
     let sql;
     msg.route = "Applying Job";
+    console.log(JSON.stringify(req.body));
+      console.log(req.file.location);
     let ts = new Date().toISOString().slice(0, 19).replace('T', ' ');;
     console.log("date of " + ts);
     let status = "Pending";
     console.log('request reached'+JSON.stringify(req.body));
     {
       
-      sql=`INSERT INTO application(studentid,jobid,applicationdate,status,jobtitle) VALUES ('${req.body.studentid}','${req.body.jobid}','${ts}', '${status}','${req.body.jobtitle}')`;
+      sql=`INSERT INTO application(studentid,jobid,applicationdate,status,jobtitle,resume) VALUES ('${req.body.studentid}','${req.body.jobid}','${ts}', '${status}','${req.body.jobtitle}',
+      '${req.file.location}')`;
       console.log(sql);
     }
    
@@ -232,7 +221,7 @@ router.post("/postJobOpening", async (req, res) => {
     msg.route = "login";
     console.log('request reached'+JSON.stringify(req.body));
     {
-      sql="Select s.StudentId,s.Name,a.jobid from application a join Student s where a.jobid='"+req.body.jobid+"' and s.studentId = a.studentid";
+      sql="Select s.StudentId,s.Name,a.jobid,a.resume from application a join Student s where a.jobid='"+req.body.jobid+"' and s.studentId = a.studentid";
       console.log(sql);
     }
     pool.query(sql, (err, sqlResult) => {

@@ -35,7 +35,7 @@ class StudentDashboard extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
     componentDidMount(){
-        
+        this.searchJobPosting();
     }
     citySearch=(e)=>
     {
@@ -65,10 +65,12 @@ class StudentDashboard extends Component {
     }
     onSubmit = async (e) => {
         e.preventDefault();
-        const data={studentid :localStorage.getItem("user_id"),
-        jobid:this.state.jobid ,
-        jobtitle:this.state.jobtitle               
-         };
+        const data = new FormData()
+        data.append('file', this.state.userResume);
+        data.append('studentid',localStorage.getItem("user_id"));
+        data.append('jobid',this.state.jobid);
+        data.append('jobtitle',this.state.jobtitle);
+
         axios.post('http://localhost:3001/jobs/applyJob',data)
         .then(response => {
             console.log("Status Code : ",response.status);
@@ -152,12 +154,19 @@ class StudentDashboard extends Component {
 
 
     }
+    handleResumeChange = (e) => {
+        console.log(e.target.files[0])
+        this.setState({
+            userResume: e.target.files[0]
+        });
+    };
    
     render() {
         let redirectVar;let joblist;let company,name;
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
+        let userImage=this.state.company_profile.image||dummy;
 console.log(this.state.company_profile.name);
         if (this.state && this.state.company_profile) {
             company = this.state.company_profile;
@@ -223,7 +232,7 @@ console.log(this.state.company_profile.name);
                             <div className="row mt-3">
                       <div className="col-sm-4">
                           <div className="card" style={{width: 15 +"rem"}}>
-                              <img className="card-img-top" src={dummy} alt="" />
+                              <img className="card-img-top" src={userImage} alt="" />
                               <div className="text-center">
                               <div className="card-body">
 
@@ -281,7 +290,7 @@ console.log(this.state.company_profile.name);
                              contentLabel="Example Modal" >
                            
                            <div>
-                         <form onSubmit={this.onSubmit}>
+                         <form onSubmit={this.onSubmit} enctype="multipart/form-data">
                              
             <div class="container">
             <div class="panel panel-default">
@@ -290,7 +299,7 @@ console.log(this.state.company_profile.name);
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1"><b>Add Resume</b></span>
                                 </div>
-                                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
+                                <input type="file" name="user_resume" accept="application/pdf" className="form-control" aria-label="resume" aria-describedby="basic-addon1" onChange={this.handleResumeChange} />
                             </div>
                             <center>
                                 <Button variant="primary" type="submit">

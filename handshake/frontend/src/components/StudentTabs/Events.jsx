@@ -11,6 +11,8 @@ class Events extends Component {
         super(props);
         this.state = {
             openevent: false,
+            registerIsOpen:false,
+            showRegisteredIsOpen:false,
             searchstring:'' ,
             events:[]  ,
             eventname:'',
@@ -19,10 +21,13 @@ class Events extends Component {
             date:'',
             eligibility:'',
             city:'',
-            location:''    
+            location:'',
+            eventslist:[]    
         };
         this.openEvent = this.openEvent.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.registerEvent=this.registerEvent.bind(this);
+        this.showRegistered=this.showRegistered.bind(this);
     }
     componentDidMount(){
         this.searchEvent();
@@ -47,14 +52,69 @@ class Events extends Component {
     }
     registerEvent(event){
         this.setState({
-            eventid:event.EventId
+            eventid:event.EventId,
+            eventname:event.EventName,
+            registerIsOpen:true,
+            eligibility:event.Eligibility
+        });
+    }
+    register=()=>{
+        const data = {
+            studentid:localStorage.getItem("user_id"),
+            eventid:this.state.eventid,
+            eligibility:this.state.eligibility
+        }
+        axios.post('http://localhost:3001/events/register',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                alert("Registered Successfully!!");
+                console.log("applied");
+            }
+        })
+        .catch(err => { 
+            alert("Could Not Register.Check Eligibility");
+            this.setState({errorMessage:"Could not apply"});
+        });
+        this.setState({
+            
+            registerIsOpen:false,
+           
         });
         
     }
     closeModal() {
         this.setState({
-            openevent:false
+            openevent:false,
+            registerIsOpen:false,
+            showRegisteredIsOpen:false
         });
+    }
+    showRegistered=()=>{
+        this.setState({
+            showRegisteredIsOpen:true 
+        });
+        const data = {
+            studentid:localStorage.getItem("user_id"),
+        }
+        axios.post('http://localhost:3001/events/getRegistered',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                let eventslist=response.data;
+                console.log(JSON.stringify(eventslist))
+                this.setState({
+                    eventslist  
+                });
+                
+            }
+          
+        })
+        .catch(err => { 
+            
+            this.setState({errorMessage:"Could not apply"});
+        });
+        
     }
     eventCriteria=(e)=>
     {
@@ -113,7 +173,12 @@ class Events extends Component {
             <div>
             {redirectVar}
             
-            <div className="container">     
+            <div className="container">  
+            <div>
+  <Button variant="primary" size="lg" block onClick={() => this.showRegistered()}>
+    Registered Events
+  </Button>
+</div>   
                         <div className="main-div">
                             <div className="panel">
                                 <h2>Event Search</h2>
@@ -130,6 +195,7 @@ class Events extends Component {
             </div>
         </div>
 	</div>
+   
     
 </div>
 </div>
@@ -159,6 +225,62 @@ class Events extends Component {
                                 </Button>
                             </center>
                         </Modal>
+
+                        <Modal
+                            isOpen={this.state.registerIsOpen}
+                            onRequestClose={this.closeModal}
+                             contentLabel="Example Modal" >
+                           
+                           <div>
+                         
+                             
+            <div class="container">
+            <div class="panel panel-default">
+    <div class="panel-heading">Register for event: {this.state.eventname}</div>
+                    
+                            <center>
+                                <Button variant="primary" type="button" onClick={this.register}>
+                                    <b>Register</b>
+                                </Button>&nbsp;&nbsp;
+                                <Button variant="secondary" onClick={this.closeModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
+                            </div>
+                            </div>
+                       
+                        </div>
+                        </Modal>
+                        <Modal
+                        isOpen={this.state.showRegisteredIsOpen}
+                            onRequestClose={this.closeModal}
+                             contentLabel="Example Modal" >
+                             <div>
+                             <div className="panel panel-default p50 uth-panel">
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {this.state.eventslist.map(event =>
+                        <tr key={event.EventId}>
+                        <td>{event.EventName}</td>
+                        </tr>
+                    )}
+                     </tbody>
+                </table>
+                </div>
+                             <center> 
+                                <Button variant="primary" onClick={this.closeModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
+                </div>
+                        </Modal>
+
+                       
 </div>
  </div>
            

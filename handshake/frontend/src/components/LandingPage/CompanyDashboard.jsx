@@ -17,6 +17,7 @@ class CompanyDashboard extends Component {
         addIsOpen:false,
         openStatus:false,
         openStudent:false,
+        openResume:false,
         jobtitle: '',
         description: '',
         msg: '',
@@ -32,6 +33,8 @@ class CompanyDashboard extends Component {
         this.addJobPost = this.addJobPost.bind(this);
         this.openStatus = this.openStatus.bind(this);
         this.openStudent = this.openStudent.bind(this);
+        this.openResume = this.openResume.bind(this);
+        this.closeResumeModal = this.closeResumeModal.bind(this);
     }
     componentDidMount(){
         this.viewJobPosting();   
@@ -167,6 +170,22 @@ class CompanyDashboard extends Component {
         });
 
     }
+    openStatus(student) {
+        this.setState({
+            openStatus: true ,
+            studentid:student.StudentId,
+            jobid:student.jobid      
+        });
+    }
+    openResume(student) {
+        this.setState({
+            openResume: true ,
+            studentid:student.StudentId,
+            jobid:student.jobid,
+            resume:student.resume
+        });
+    }
+    
     handleStatusChange=(e)=>{
 
         this.setState({
@@ -177,8 +196,6 @@ class CompanyDashboard extends Component {
         this.setState({
             jobtitle : e.target.value
         })
-
-
     }
     descriptionChange = (e) => {
         this.setState({
@@ -224,6 +241,11 @@ class CompanyDashboard extends Component {
             openStudent:false
         });
     }
+    closeResumeModal() {
+        this.setState({
+            openResume:false
+        });
+    }
     
     addJobPost(){
 
@@ -238,6 +260,7 @@ class CompanyDashboard extends Component {
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
+        let userImage=this.state.student_profile.image||dummy;
        
        
         return (
@@ -301,6 +324,7 @@ class CompanyDashboard extends Component {
                         <td>{student.Name} </td>
                         <td><a onClick={() => this.openStudent(student)}>View Profile</a></td>
                         <td><a onClick={() => this.openStatus(student)}>Update Application Status</a></td>
+                        <td><a onClick={() => this.openResume(student)}>View Resume</a></td>
                         </tr>
                     )}
                      </tbody>
@@ -340,13 +364,30 @@ class CompanyDashboard extends Component {
                     
                         </Modal>
                         <Modal
+                            isOpen={this.state.openResume}
+                            onRequestClose={this.closeResumeModal}
+                             contentLabel="Example Modal" >
+                         <div>   
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Resume</div>
+                    <p><a href={this.state.resume}>Download Resume</a></p>
+                </div> 
+                            <center>
+                                <Button variant="primary" onClick={this.closeResumeModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
+                            </div>
+                    
+                        </Modal>
+                        <Modal
                             isOpen={this.state.openStudent}
                             onRequestClose={this.closeStudentModal}
                              contentLabel="Example Modal" >
                                  <div className="row mt-3">
                   <div className="col-sm-4">
                       <div className="card" style={{width: 15 +"rem"}}>
-                          <img className="card-img-top" src={dummy} alt="" />
+                          <img className="card-img-top" src={userImage} alt="" />
                           <div className="text-center">
                           <div className="card-body">
                           <div class="panel panel-default">
@@ -459,18 +500,10 @@ class CompanyDashboard extends Component {
                             </div>
                             <div className="input-group mb-2">
                                 <div className="input-group-prepend">
-                                    <span className="input-group-text" id="basic-addon1"><b>Posting Date</b></span>
-                                </div>
-                                <input type="text" size="50" name="postingDate" className="form-control" aria-label="postingDate" aria-describedby="basic-addon1" onChange={this.handlePostingDtaeChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
-                            </div>
-                            <div className="input-group mb-2">
-                                <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1"><b>Deadline</b></span>
                                 </div>
                                 <input type="text" size="50" name="deadline" className="form-control" aria-label="deadline" aria-describedby="basic-addon1" onChange={this.handleDeadlineChange}   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="YYYY-MM-DD" title="Enter a date in this formart YYYY-MM-DD" required />
                             </div>
-                            
-                            
                             <center>
                                 <Button variant="primary" type="submit">
                                     <b>Add</b>

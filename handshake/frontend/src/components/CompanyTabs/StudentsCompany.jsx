@@ -85,6 +85,7 @@ class StudentsCompany extends Component {
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
+        let userImage=this.state.student_profile.image||dummy
         studentlist =( <div className="panel panel-default p50 uth-panel">
                 <table className="table table-hover">
                     <thead>
@@ -145,7 +146,7 @@ class StudentsCompany extends Component {
                                  <div className="row mt-3">
                   <div className="col-sm-4">
                       <div className="card" style={{width: 15 +"rem"}}>
-                          <img className="card-img-top" src={dummy} alt="" />
+                          <img className="card-img-top" src={userImage} alt="" />
                           <div className="text-center">
                           <div className="card-body">
                           <div class="panel panel-default">

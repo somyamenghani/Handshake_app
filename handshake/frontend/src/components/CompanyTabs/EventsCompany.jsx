@@ -5,12 +5,14 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import Modal from 'react-modal';
+import dummy from '../../common/dummy.png';
 
 class EventsCompany extends Component {
     constructor(props) {
         super(props);
         this.state = {
             events: [] ,
+            students:[],
             successUpdate: false,
             addIsOpen:false  ,
             modalIsOpen: false,
@@ -21,13 +23,16 @@ class EventsCompany extends Component {
             date:'',
             location:'',
             city:'',
-            updateFlag:false
+            updateFlag:false,
+            openStudent:false,
+            student_profile:[]
 
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.addEvent = this.addEvent.bind(this);
         this.closeAddModal=this.closeAddModal.bind(this);
+        this.closeStudentModal = this.closeStudentModal.bind(this);
     }
     componentDidMount(){
         this.viewEvents();
@@ -131,6 +136,22 @@ class EventsCompany extends Component {
         this.setState({
             modalIsOpen: true,       
         });
+        const data={eventid :event.EventId};
+        axios.post('http://localhost:3001/events/getStudentApplied',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                let students=response.data;
+                console.log(JSON.stringify(students))
+                this.setState({
+                    students 
+                });
+            }
+        })
+        .catch(err => { 
+            this.setState({errorMessage:"Student list could not be viewed"});
+        });
+
     }
 
     closeModal() {
@@ -143,10 +164,36 @@ class EventsCompany extends Component {
             addIsOpen: false
         });
     }
+    closeStudentModal() {
+        this.setState({
+            openStudent:false
+        });
+    }
     addEvent(){
 
         this.setState({
             addIsOpen: true         
+        });
+    }
+    openStudent(student){
+        this.setState({
+            openStudent: true ,
+            studentid:student.StudentId   
+        });
+        const data={userId :student.StudentId};
+        axios.post('http://localhost:3001/profile',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                let student_profile=response.data;
+                console.log(JSON.stringify(student_profile))
+                this.setState({
+                    student_profile  
+                });
+            }
+        })
+        .catch(err => { 
+            this.setState({errorMessage:"Student profile profile could not be viewed"});
         });
     }
    
@@ -155,6 +202,7 @@ class EventsCompany extends Component {
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
+        let userImage=this.state.student_profile.image||dummy;
         
        
         return (
@@ -195,11 +243,31 @@ class EventsCompany extends Component {
                       <Modal
                             isOpen={this.state.modalIsOpen}
                             onRequestClose={this.closeModal}
-                             contentLabel="Example Modal" >
-                           
-                           <div>
+                             contentLabel="Example Modal" >       
+                     <div>
                      Student Details
-                        </div>
+                    </div>
+                    <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {this.state.students.map(student =>
+                        <tr key={student.StudentId}>
+                        <td>{student.Name} </td>
+                        <td><a onClick={() => this.openStudent(student)}>View Profile</a></td>
+                        
+                        </tr>
+                    )}
+                     </tbody>
+                </table>
+                            <center>
+                                <Button variant="primary" onClick={this.closeModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
                        
                         </Modal>
                     </tbody>
@@ -285,6 +353,68 @@ onRequestClose={this.closeAddModal}
 </div>
 
 </Modal>
+<Modal
+                            isOpen={this.state.openStudent}
+                            onRequestClose={this.closeStudentModal}
+                             contentLabel="Example Modal" >
+                                 <div className="row mt-3">
+                  <div className="col-sm-4">
+                      <div className="card" style={{width: 15 +"rem"}}>
+                          <img className="card-img-top" src={userImage} alt="" />
+                          <div className="text-center">
+                          <div className="card-body">
+                          <div class="panel panel-default">
+                    <div class="panel-heading">Contact</div>
+                    <div class="panel-body">{this.state.student_profile.emailId}</div>
+                    <div class="panel-body">{this.state.student_profile.contactNumber}</div>
+                    <div class="panel-body">{this.state.student_profile.city}</div>
+                    <div class="panel-body">{this.state.student_profile.state}</div>
+                    <div class="panel-body">{this.state.student_profile.country}</div>
+                    </div>
+                       </div>
+                      </div>
+                      </div>
+                  </div>
+                  
+                  <div className="col-sm-7">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">About</div>
+                    <div class="panel-body">{this.state.student_profile.name}</div>
+                </div>
+                    
+                    <div class="panel panel-default">
+                    <div class="panel-heading">My Journey</div>
+                 <div class="panel-body">{this.state.student_profile.careerObj}</div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Educational Details(Current)</div>
+                     <div class="panel-body">{this.state.student_profile.collegeName}</div>
+                     <div class="panel-body">{this.state.student_profile.collegeLocation}</div>
+                     <div class="panel-body">{this.state.student_profile.major}</div>
+                     <div class="panel-body">{this.state.student_profile.degree}</div>
+                     <div class="panel-body">{this.state.student_profile.cgpa}</div>
+                     <div class="panel-body">{this.state.student_profile.yop}</div>
+                    
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Experience Details</div>
+        <div class="panel-body">{this.state.student_profile.workDetails}</div>
+                    
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Skills</div>
+                     <div class="panel-body">{this.state.student_profile.skills}</div>
+                    
+                </div>
+                      
+                  </div>
+              </div>     
+                         <center>
+                                <Button variant="primary" onClick={this.closeStudentModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
+                        </Modal>
 </div>
 </div>
            
