@@ -4,18 +4,26 @@ import axios from 'axios';
 import {Redirect} from 'react-router';
 import dummy from '../../common/dummy.png';
 import {connect} from 'react-redux';
-import { Modal, Button } from 'react-bootstrap';
-import { NavLink, Link } from "react-router-dom";
-import {profileUpdate, uploadFile} from "../../common/action";
+import Modal from 'react-modal';
+import { Button } from 'react-bootstrap';
+
+
 
 class CompanyProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showModal: false,
-            successUpdate:false,   
+            successUpdate:false,
+            imageModal:false,
+            userImage:null ,
+            user_profile:[] ,
+            imageChange:false 
         };
          this.handleEditProfile = this.handleEditProfile.bind(this);
+         this.closeModal = this.closeModal.bind(this);
+        this.handleImageEdit = this.handleImageEdit.bind(this);
+        this.onImageSubmit=this.onImageSubmit.bind(this);
     }
     
     getProfile = async () => {
@@ -39,6 +47,45 @@ class CompanyProfile extends Component {
     componentDidMount() {
         this.getProfile();
        
+    }
+    closeModal() {
+        this.setState({
+            imageModal:false
+        });
+    }
+    handleImageEdit=(e)=>{
+        this.setState({imageModal:true
+            
+        });
+        
+    }
+    handleImageChange = (e) => {
+        console.log(e.target.files[0])
+        this.setState({
+            userImage: e.target.files[0]
+        });
+    };
+    onImageSubmit= async (e)=>{
+        
+        const data = new FormData()
+        data.append('file', this.state.userImage);
+        data.append('userId',localStorage.getItem("user_id"));
+        axios.post('http://localhost:3001/companyProfile/upload',data)
+        .then(response => {
+        if (response.status === 200) {
+            console.log("Image uploaded")
+            this.setState({
+                imageModal: false,
+                imageChange:true
+            });
+            
+        }
+        this.getProfile();
+        this.getProfile();
+    })
+    .catch(err => { 
+        this.setState({errorMessage: "error"});
+    })
     }
 
     handleEditProfile = () => {
@@ -75,13 +122,7 @@ console.log("insde"+this.state.modal)
         });
         
     };
-    
-
-    handleImageChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.files[0]
-        });
-    };
+     
     handleClose = (e) => {
         this.setState({ showModal:!this.state.showModal});
     }
@@ -91,20 +132,12 @@ console.log("insde"+this.state.modal)
         e.preventDefault();
         let userId=localStorage.getItem("user_id");
         console.log(userId);
-        // let data = new FormData();
-        // data.append('user_id', userId);
-        // data.append('company_name', this.state.company_name);
-        // data.append('location', this.state.location);
-        // data.append('email_id', this.state.email_id);
-        // data.append('description', this.state.description);
-        // data.append('contactInfo', this.state.contactInfo);
-        // data.append('user_image', this.state.user_image);
         const data = {
             companyId:userId,
-            companyName : this.state.companyName,
-            description : this.state.description,
-            contactInfo : this.state.contactInfo,
-            location : this.state.location,
+            companyName : this.state.companyName||this.state.user_profile.name,
+            description : this.state.description||this.state.user_profile.description,
+            contactInfo : this.state.contactInfo||this.state.user_profile.contactInfo,
+            location : this.state.location||this.state.user_profile.location
 
         }
         
@@ -128,7 +161,7 @@ console.log("insde"+this.state.modal)
 
     render() {
         let user, name = "", user_id = "", email_id = "", location = "", city = "",state="",country="",contactInfo="",description="", redirectVar;
-        let locationVar, mailVar, userName, userButton, listButton, userImage = dummy;let showCompanyProfile;
+        let locationVar, mailVar, userName, userButton, listButton, userImage = this.state.user_profile.image||dummy;let showCompanyProfile;
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
@@ -149,6 +182,10 @@ console.log("insde"+this.state.modal)
             console.log("thismodal"+this.state.showModal)
            
             }
+            if(this.state.imageChange)
+        {
+            userImage=this.state.user_profile.image;
+        }
             if((!this.state.showModal) )
             {
                 showCompanyProfile =(
@@ -157,7 +194,7 @@ console.log("insde"+this.state.modal)
                 <div className="row mt-3">
                       <div className="col-sm-4">
                           <div className="card" style={{width: 15 +"rem"}}>
-                              <img className="card-img-top" src={dummy} alt="" />
+                              <img className="card-img-top" src={userImage} alt="" />
                               <button type="button" id="picEdit" className="btn btn-primary btn-block btn-xs pull-right" onClick={this.handleImageEdit}>Edit Profile Picture</button>
                               <div className="text-center">
                               <div className="card-body">
@@ -211,6 +248,33 @@ console.log("insde"+this.state.modal)
                   
 
                     </div>
+                    <Modal
+                            isOpen={this.state.imageModal}
+                            onRequestClose={this.closeModal}
+                             contentLabel="Example Modal" >
+                           
+                           <div>
+                         <form onSubmit={this.onImageSubmit} enctype="multipart/form-data">
+                             
+            <div class="container">
+            <div class="panel panel-default">
+    <div class="panel-heading">Choose profile picture: </div>
+                    <div className="input-group mb-2">
+                                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
+                            </div>
+                            <center>
+                                <Button variant="primary" type="submit">
+                                    <b>Change</b>
+                                </Button>&nbsp;&nbsp;
+                                <Button variant="secondary" onClick={this.closeModal}>
+                                    <b>Close</b>
+                                </Button>
+                            </center>
+                            </div>
+                            </div>
+                        </form>
+                        </div>
+                        </Modal>
                     </div>
                 )
             }
@@ -256,12 +320,7 @@ console.log("insde"+this.state.modal)
                                 <input type="text" size="50" name="contactInfo" className="form-control" aria-label="contactInfo" aria-describedby="basic-addon1" onChange={this.handleContactInfoChange} defaultValue={this.state.user_profile.contactInfo}  pattern=".*\S.*" required />
                             </div>
                             
-                            <div className="input-group mb-2">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text" id="basic-addon1"><b>Profile Picture</b></span>
-                                </div>
-                           <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleChange} />
-                            </div>
+                            
                             <center>
                                 <Button variant="primary" type="submit">
                                     <b>Update</b>
