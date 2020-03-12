@@ -3,6 +3,8 @@ const app = require("../app");
 const express = require("express");
 const router = express.Router();
 const pool = require('../db/sqlConnection');
+const bcrypt=require('bcrypt');
+const salt=bcrypt.genSaltSync(10);
 
 //Route to handle Post Request Call
 router.post("/", async (req, res) => {
@@ -11,13 +13,15 @@ router.post("/", async (req, res) => {
     let sql;
     msg.route = "signup";
     console.log('request reached'+JSON.stringify(req.body));
+    bcrypt.hash(req.body.password,salt,function(err,password){
     if(req.body.userType==1)
     {
-      sql=`INSERT INTO Student(Name, EmailId, Password,CollegeName,Major) VALUES ('${req.body.name}', '${req.body.userEmail}', '${req.body.password}', '${req.body.collegeName}','${req.body.major}')`
+      console.log(password);
+      sql=`INSERT INTO Student(Name, EmailId, Password,CollegeName,Major) VALUES ('${req.body.name}', '${req.body.userEmail}', '${password}', '${req.body.collegeName}','${req.body.major}')`
       console.log(sql);
     }
     else{
-        sql=`INSERT INTO Company(Name, EmailId, Password, Location) VALUES ('${req.body.name}','${req.body.userEmail}', '${req.body.password}','${req.body.location}')`
+        sql=`INSERT INTO Company(Name, EmailId, Password, Location) VALUES ('${req.body.name}','${req.body.userEmail}', '${password}','${req.body.location}')`
         console.log(sql);
     }
     pool.query(sql, (err, sqlResult) => {
@@ -49,5 +53,6 @@ router.post("/", async (req, res) => {
       }
   }
     })
+  })
   })
 module.exports = router;
