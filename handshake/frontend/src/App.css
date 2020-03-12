@@ -19,6 +19,7 @@
   border: 2px solid black;
 }
 
+
 .login-form .form-group {
   margin-bottom:10px;
 }
@@ -75,4 +76,16 @@
   
 .input-group .input-group-text {
   width: 300%;
+}
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 20ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open{
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+  opacity: 0;
 }
