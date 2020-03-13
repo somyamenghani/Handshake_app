@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import {backendURI} from './config';
 
 export const USER_PROFILE_UPDATE = 'profile_update';
 
@@ -7,7 +8,7 @@ export function profileUpdate(values, callback) {
   console.log('inside  user profile update action creator');
   console.info('profile_update_values', values);
   // const payload_response_data;
-  const request = axios.post('http://localhost:3001/update', values, { withCredentials: true });
+  const request = axios.post(backendURI +'/update', values, { withCredentials: true });
 
   return (dispatch) => {
     request.then(
@@ -28,7 +29,7 @@ export function profileUpdate(values, callback) {
 
 export function uploadFile(payload, callback) {
   console.log('Inside the upload functionality');
-  const request = fetch('http://localhost:3001/files/upload', {
+  const request = fetch(backendURI +'/files/upload', {
     method: 'POST',
     body: payload,
     credentials: 'include',

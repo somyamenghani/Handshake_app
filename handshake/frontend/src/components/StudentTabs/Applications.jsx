@@ -5,6 +5,8 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import { Button } from 'react-bootstrap';
 import Modal from 'react-modal';
+import {backendURI} from '../../common/config';
+
 
 class Applications extends Component {
     constructor(props) {
@@ -73,7 +75,7 @@ class Applications extends Component {
             status:this.state.applicationstatus
         }
         console.log(JSON.stringify(data))
-        axios.post('http://localhost:3001/jobs/getJobsApplied',data)
+        axios.post(backendURI + '/jobs/getJobsApplied',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

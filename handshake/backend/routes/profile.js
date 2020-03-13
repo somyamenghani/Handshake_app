@@ -68,12 +68,12 @@ router.post("/", async (req, res) => {
     let msg = req.body;
     let sql;
     msg.route = "search students";
-    console.log('request reached'+JSON.stringify(req.body));
+    //console.log('request reached'+JSON.stringify(req.body));
     let searchString = req.body.searchString;
     
     sql = "select StudentId,EmailId,Name,CollegeName,Skills,Major from Student where (Name like '%" + searchString + "%' or CollegeName like '%" + searchString +"%' or Skills like '%" + searchString +"%')";
     
-    console.log(sql);
+   // console.log(sql);
   
     
     pool.query(sql, (err, sqlResult) => {
@@ -85,9 +85,9 @@ router.post("/", async (req, res) => {
       res.end("Internal server error");
     }
       else{
-          console.log(sqlResult);
+         // console.log(sqlResult);
               let result=JSON.stringify(sqlResult);
-               console.log(result);
+            //   console.log(result);
               res.writeHead(200,{
                'Content-Type' : 'text/plain'
             })

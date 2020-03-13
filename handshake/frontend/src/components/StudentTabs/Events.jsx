@@ -5,6 +5,8 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import { Button } from 'react-bootstrap';
 import Modal from 'react-modal';
+import {backendURI} from '../../common/config';
+
 
 class Events extends Component {
     constructor(props) {
@@ -64,7 +66,7 @@ class Events extends Component {
             eventid:this.state.eventid,
             eligibility:this.state.eligibility
         }
-        axios.post('http://localhost:3001/events/register',data)
+        axios.post(backendURI + '/events/register',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -97,7 +99,7 @@ class Events extends Component {
         const data = {
             studentid:localStorage.getItem("user_id"),
         }
-        axios.post('http://localhost:3001/events/getRegistered',data)
+        axios.post(backendURI + '/events/getRegistered',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -127,7 +129,7 @@ class Events extends Component {
         let data = {
             searchString:this.state.searchstring   
         }
-        axios.post('http://localhost:3001/events/searchEvents',data)
+        axios.post(backendURI + '/events/searchEvents',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

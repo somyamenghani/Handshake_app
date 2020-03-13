@@ -8,9 +8,7 @@
   const companyProfile = require("./routes/companyProfile");
   const events = require("./routes/events");
   const jobs = require("./routes/jobs");
-  
-  
-  
+
   app.use("/login", login);
   app.use("/signup", signup);
   app.use("/profile", profile);

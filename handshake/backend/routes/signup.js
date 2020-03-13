@@ -12,17 +12,17 @@ router.post("/", async (req, res) => {
     let msg = req.body;
     let sql;
     msg.route = "signup";
-    console.log('request reached'+JSON.stringify(req.body));
+    
     bcrypt.hash(req.body.password,salt,function(err,password){
     if(req.body.userType==1)
     {
-      console.log(password);
+      
       sql=`INSERT INTO Student(Name, EmailId, Password,CollegeName,Major) VALUES ('${req.body.name}', '${req.body.userEmail}', '${password}', '${req.body.collegeName}','${req.body.major}')`
-      console.log(sql);
+      
     }
     else{
         sql=`INSERT INTO Company(Name, EmailId, Password, Location) VALUES ('${req.body.name}','${req.body.userEmail}', '${password}','${req.body.location}')`
-        console.log(sql);
+       
     }
     pool.query(sql, (err, sqlResult) => {
       if (err) {

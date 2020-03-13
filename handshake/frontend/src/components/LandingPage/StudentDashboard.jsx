@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 import { Button } from 'react-bootstrap';
 import Modal from 'react-modal';
 import dummy from '../../common/dummy.png';
+import {backendURI} from '../../common/config';
+
 
 class StudentDashboard extends Component {
     constructor(props) {
@@ -71,7 +73,7 @@ class StudentDashboard extends Component {
         data.append('jobid',this.state.jobid);
         data.append('jobtitle',this.state.jobtitle);
 
-        axios.post('http://localhost:3001/jobs/applyJob',data)
+        axios.post(backendURI +'/jobs/applyJob',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -110,7 +112,7 @@ class StudentDashboard extends Component {
         });
        
         const data={userId :job.CompanyId};
-        axios.post('http://localhost:3001/companyProfile',data)
+        axios.post(backendURI +'/companyProfile',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -137,7 +139,7 @@ class StudentDashboard extends Component {
             searchString:this.state.searchstring,
             category:this.state.categoryValue
         }
-        axios.post('http://localhost:3001/jobs/searchJobs',data)
+        axios.post(backendURI +'/jobs/searchJobs',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

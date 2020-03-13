@@ -6,6 +6,7 @@ import dummy from '../../common/dummy.png';
 import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
+import {backendURI} from '../../common/config';
 
 class ShowProfile extends Component {
     constructor(props) {
@@ -26,7 +27,7 @@ class ShowProfile extends Component {
     getProfile = async () => {
         let userId=localStorage.getItem("user_id");
         const data={userId : userId}
-        let result = await axios.post('http://localhost:3001/profile',data)
+        let result = await axios.post(backendURI +'/profile',data)
         let user_profile = result.data;
         console.log(user_profile);
         await this.setState({ user_profile });
@@ -142,7 +143,7 @@ this.setState({ showEditModal:true});
         const data = new FormData()
         data.append('file', this.state.userImage);
         data.append('userId',localStorage.getItem("user_id"));
-        axios.post('http://localhost:3001/profile/upload',data)
+        axios.post(backendURI +'/profile/upload',data)
         .then(response => {
         if (response.status === 200) {
             console.log("Image uploaded")
@@ -153,7 +154,7 @@ this.setState({ showEditModal:true});
             
         }
         this.getProfile();
-        this.getProfile();
+       
     })
     .catch(err => { 
         this.setState({errorMessage: "error"});
@@ -181,7 +182,7 @@ this.setState({ showEditModal:true});
         }
         //set the with credentials to true
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:3001/update',data)
+        axios.post(backendURI +'/update',data)
         .then(response => {
         if (response.status === 200) {
             this.setState({

@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import Modal from 'react-modal';
 import dummy from '../../common/dummy.png';
+import {backendURI} from '../../common/config';
 
 class StudentsCompany extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class StudentsCompany extends Component {
             studentid:student.StudentId   
         });
         const data={userId :student.StudentId};
-        axios.post('http://localhost:3001/profile',data)
+        axios.post(backendURI +'/profile',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -63,7 +64,7 @@ class StudentsCompany extends Component {
         let data = {
             searchString:this.state.searchstring   
         }
-        axios.post('http://localhost:3001/profile/searchStudents',data)
+        axios.post(backendURI +'/profile/searchStudents',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

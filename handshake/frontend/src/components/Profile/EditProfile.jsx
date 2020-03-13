@@ -5,6 +5,7 @@ import {Redirect} from 'react-router';
 import dummy from '../../common/dummy.png';
 import {connect} from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
+import {backendURI} from '../../common/config';
 
 
 class EditProfile extends Component {
@@ -143,7 +144,7 @@ class EditProfile extends Component {
         }
         //set the with credentials to true
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:3001/update',data)
+        axios.post(backendURI +'/update',data)
         .then(response => {
         if (response.status === 200) {
             this.setState({

@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import { Button } from 'react-bootstrap';
 import Modal from 'react-modal';
 import dummy from '../../common/dummy.png';
+import {backendURI} from '../../common/config';
 
 class CompanyDashboard extends Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class CompanyDashboard extends Component {
             userType:localStorage.getItem("user_type"),
             companyId:localStorage.getItem("user_id")
         }
-        axios.post('http://localhost:3001/jobs/getJobsPosted',data)
+        axios.post(backendURI +'/jobs/getJobsPosted',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -79,7 +80,7 @@ class CompanyDashboard extends Component {
             city:this.state.city,
             jobcategory:this.state.categoryValue
         }
-        axios.post('http://localhost:3001/jobs/postJobOpening',data)
+        axios.post(backendURI +'/jobs/postJobOpening',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -101,7 +102,7 @@ class CompanyDashboard extends Component {
                   
         });
         const data={jobid :job.jobid};
-        axios.post('http://localhost:3001/jobs/getStudentApplied',data)
+        axios.post(backendURI +'/jobs/getStudentApplied',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -123,7 +124,7 @@ class CompanyDashboard extends Component {
             studentid:student.StudentId   
         });
         const data={userId :student.StudentId};
-        axios.post('http://localhost:3001/profile',data)
+        axios.post(backendURI +'/profile',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -153,7 +154,7 @@ class CompanyDashboard extends Component {
                     jobid:this.state.jobid,
                     status:this.state.applicationStatus      
         };
-        axios.post('http://localhost:3001/jobs/updateApplicationStatus',data)
+        axios.post(backendURI +'/jobs/updateApplicationStatus',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

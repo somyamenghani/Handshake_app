@@ -5,6 +5,7 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import api from '../../common/api';
+import {backendURI} from '../../common/config';
 
 //Define a Login Component
 class Login extends Component{
@@ -60,7 +61,7 @@ class Login extends Component{
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/login',data)
+        axios.post(backendURI + '/login/',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 console.log("Status Code : ",response);

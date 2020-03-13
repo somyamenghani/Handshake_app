@@ -3,6 +3,7 @@ import '../../App.css';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
+import {backendURI} from '../../common/config';
 
 //Define a Signup Component
 class SignUp extends Component{
@@ -89,7 +90,7 @@ class SignUp extends Component{
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/signup',data)
+        axios.post(backendURI +'/signup',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 if(response.status === 200){

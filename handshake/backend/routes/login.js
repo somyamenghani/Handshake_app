@@ -13,15 +13,15 @@ router.post("/", async (req, res) => {
     let msg = req.body;
     let sql;
     msg.route = "login";
-    console.log('request reached'+JSON.stringify(req.body));
+    
     if(req.body.userType==1)
     {
       sql=`Select * from Student where EmailId='${req.body.userEmail}'`
-      console.log(sql);
+      
     }
     else{
       sql=`Select * from Company where EmailId='${req.body.userEmail}'`;
-      console.log(sql);
+     
     }
     pool.query(sql, (err, sqlResult) => {
       if (err) {
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
             res.end("Internal server error");
             }
             if(matches){
-        console.log(sqlResult);
+        //console.log(sqlResult);
         const payload = {
           emailId: req.body.userEmail,
           userId: JSON.stringify(sqlResult[0].StudentId),
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
           expiresIn: 900000 // in seconds
         });
         let jwtToken = 'JWT ' + token;
-        console.log(jwtToken);
+        
         
         res.writeHead(200,{
           'Content-Type' : 'text/plain'
@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
       res.end();
       }
       else{
-        console.log("reached else")
+        //console.log("reached else")
         res.writeHead(401,'Invalid User Credentials',{
           'Content-Type' : 'text/plain'
       })
@@ -85,7 +85,7 @@ router.post("/", async (req, res) => {
           }
           if(matches)
           {
-      console.log(sqlResult);
+      
       // let result=JSON.stringify(sqlResult);
       // console.log(result);
       const payload = {
@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
         expiresIn: 900000 // in seconds
       });
       let jwtToken = 'JWT ' + token;
-      console.log(jwtToken);
+     
       res.writeHead(200,{
         'Content-Type' : 'text/plain'
     })
@@ -106,7 +106,7 @@ router.post("/", async (req, res) => {
     res.end();
     }
     else{
-      console.log("reached else")
+      
       res.writeHead(401,'Invalid User Credentials',{
         'Content-Type' : 'text/plain'
     })
@@ -117,7 +117,7 @@ router.post("/", async (req, res) => {
   
       
     else {
-      console.log(sqlResult);
+      
         res.writeHead(401,'No Such User Id exists',{
           'Content-Type' : 'text/plain'
       })

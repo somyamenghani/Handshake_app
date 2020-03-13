@@ -6,6 +6,7 @@ import dummy from '../../common/dummy.png';
 import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
+import {backendURI} from '../../common/config';
 
 
 
@@ -30,7 +31,7 @@ class CompanyProfile extends Component {
         let userId=localStorage.getItem("user_id");
         const data={userId : userId}
         console.log("making request for company")
-        let result = await axios.post('http://localhost:3001/companyProfile',data)
+        let result = await axios.post(backendURI +'/companyProfile',data)
         let user_profile = result.data;
         console.log(user_profile+"getuser as comapny");
         await this.setState({ user_profile });
@@ -70,7 +71,7 @@ class CompanyProfile extends Component {
         const data = new FormData()
         data.append('file', this.state.userImage);
         data.append('userId',localStorage.getItem("user_id"));
-        axios.post('http://localhost:3001/companyProfile/upload',data)
+        axios.post(backendURI +'/companyProfile/upload',data)
         .then(response => {
         if (response.status === 200) {
             console.log("Image uploaded")
@@ -141,7 +142,7 @@ console.log("insde"+this.state.modal)
 
         }
         
-        axios.post('http://localhost:3001/companyProfile/update',data)
+        axios.post(backendURI +'/companyProfile/update',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             console.log("Status Code : ",response);
