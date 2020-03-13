@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import Modal from 'react-modal';
 import dummy from '../../common/dummy.png';
-import backendURI from '../../common/config';
+import {backendURI} from '../../common/config';
 
 class EventsCompany extends Component {
     constructor(props) {
@@ -116,7 +116,7 @@ class EventsCompany extends Component {
             city:this.state.city,
             eligibility:this.state.categoryValue
         }
-        axios.post(backendURI + 'events',data)
+        axios.post(backendURI+'/events',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

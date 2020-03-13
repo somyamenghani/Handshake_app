@@ -37,9 +37,9 @@ class ShowProfile extends Component {
         console.log(user_profile.userId);
     };
 
-    componentWillReceiveProps() {
-        this.getProfile();
-    }
+    // componentWillReceiveProps() {
+    //     this.getProfile();
+    // }
 
     componentDidMount() {
         this.getProfile();
@@ -203,10 +203,14 @@ this.setState({ showEditModal:true});
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
-        if(this.state.imageChange)
+        else
         {
-            userImage=this.state.user_profile.image;
+            redirectVar = <Redirect to="/showProfile" />
         }
+        // if(this.state.imageChange)
+        // {
+        //     userImage=this.state.user_profile.image;
+        // }
         
         return (
             <div>

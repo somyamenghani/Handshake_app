@@ -166,7 +166,7 @@ console.log("insde"+this.state.modal)
         if (!localStorage.getItem("token")) {
             redirectVar = <Redirect to="/login" />;
         }
-        if (this.state.successUpdate) {
+        else {
             redirectVar = <Redirect to="/showCompanyProfile" />;
         }
 
