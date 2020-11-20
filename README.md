@@ -1,8 +1,18 @@
 # Handshake_app
 Handshake prototype app
-     	
+  ## Features:
+  #### User can register as student or employer
+ #### Can create profile with basic details, skills and profile photo
+  #### Company can add job post, see list of students applied, see resume of students applied, change status of application.
+  #### Company can search students based on name, college or skills and see their profile.
+  #### Company can initiate conversation with students, and also see their profile.
+  #### Company can host events
+  #### Students can apply to jobs by uploading their resume, the can search for jobs, see comapny profile.
+  #### Students can see list of all applications and its status.
+  #### Students can start conversation with other students.
+  #### Students can view and apply for events.
 
-Important screens:
+### Important screens:
 <img width="926" alt="Screen Shot 2020-11-19 at 3 18 04 PM" src="https://user-images.githubusercontent.com/49012380/99736332-0d744600-2a7b-11eb-87b1-f2d22e2f6ab1.png">
 <img width="928" alt="Screen Shot 2020-11-19 at 3 18 12 PM" src="https://user-images.githubusercontent.com/49012380/99736329-0d744600-2a7b-11eb-8412-5e5be28f1c1f.png">
 <img width="947" alt="Screen Shot 2020-11-19 at 3 21 37 PM" src="https://user-images.githubusercontent.com/49012380/99736297-051c0b00-2a7b-11eb-9238-ddd2e267d4ce.png">
