@@ -4,7 +4,7 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.626.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^4.0.1",
     "chai": "^4.2.0",
     "cookie-parser": "^1.4.4",
